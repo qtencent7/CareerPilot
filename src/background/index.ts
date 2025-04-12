@@ -8,30 +8,46 @@ chrome.runtime.onMessage.addListener((request) => {
 // 初始化存储
 async function initStorage() {
   const data = await chrome.storage.local.get('history');
+  debugger
   if (!data.history) {
       await chrome.storage.local.set({ history: [] });
+  } else {
+    const history = data.history || [];
+    const historyMap = new Map();
+    history.forEach((item: HistoryItem) => {
+        const existingItem = historyMap.get(item.url);
+        if (!existingItem || new Date(item.timestamp) > new Date(existingItem.timestamp)) {
+            historyMap.set(item.url, item);
+        }
+    });
+    const updatedHistory = Array.from(historyMap.values());
+    debugger
+    await chrome.storage.local.set({ history: updatedHistory });
   }
 }
-
+type HistoryItem = {
+  url: string;
+  timestamp: string;
+  title: string;
+}
 // 监听标签页更新
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  await initStorage();
   if (changeInfo.status === 'complete' && tab.url) {
-      const result = await chrome.storage.local.get('history');
-      const history = result.history || [];
-
-      // 去重处理
-      if (!history.includes(tab.url)) {
-          const newHistory = [...history, {
-              url: tab.url,
-              timestamp: new Date().toISOString(),
-              title: tab.title
-          }];
-
-          await chrome.storage.local.set({ history: newHistory });
-          console.log('已记录:', tab.url);
-      }
+    const res = await chrome.storage.local.get('history');
+    const history = res.history || [];
+    console.log('历史记录已更新，每个URL只保留最新记录');
+    const bool = history.some((item: HistoryItem) => {
+      return item.url === tab.url;
+    });
+    if (bool === false) {
+      const newHistory = [...history, {
+        url: tab.url,
+        timestamp: new Date().toISOString(),
+        title: tab.title
+      }];
+      await chrome.storage.local.set({ history: newHistory });
+      console.log('已记录:', tab.url);
+    }
   }
 });
-
-// 初始化
-initStorage();
