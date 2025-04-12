@@ -1,3 +1,5 @@
+import { HistoryItem } from "../types";
+
 console.log('background is running')
 
 chrome.runtime.onMessage.addListener((request) => {
@@ -8,7 +10,7 @@ chrome.runtime.onMessage.addListener((request) => {
 // 初始化存储
 async function initStorage() {
   const data = await chrome.storage.local.get('history');
-  debugger
+
   if (!data.history) {
       await chrome.storage.local.set({ history: [] });
   } else {
@@ -21,22 +23,18 @@ async function initStorage() {
         }
     });
     const updatedHistory = Array.from(historyMap.values());
-    debugger
     await chrome.storage.local.set({ history: updatedHistory });
   }
 }
-type HistoryItem = {
-  url: string;
-  timestamp: string;
-  title: string;
-}
+
 // 监听标签页更新
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   await initStorage();
   if (changeInfo.status === 'complete' && tab.url) {
     const res = await chrome.storage.local.get('history');
+    debugger
     const history = res.history || [];
-    console.log('历史记录已更新，每个URL只保留最新记录');
+
     const bool = history.some((item: HistoryItem) => {
       return item.url === tab.url;
     });
@@ -44,10 +42,10 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       const newHistory = [...history, {
         url: tab.url,
         timestamp: new Date().toISOString(),
-        title: tab.title
+        title: tab.title,
+        icon: tab.favIconUrl,
       }];
       await chrome.storage.local.set({ history: newHistory });
-      console.log('已记录:', tab.url);
     }
   }
 });
