@@ -13,16 +13,39 @@
     sans-serif;
 
   color-scheme: light dark;
-  background-color: #242424;
+  background-color: #6a2c70;
 }
-
+* {
+  box-sizing: border-box;
+}
 @media (prefers-color-scheme: light) {
   :root {
-    background-color: #fafafa;
+    background-color: #6a2c70;
   }
 }
 
 body {
   width: 20rem;
   margin: 0;
+  height: 550px;
+  overflow-y: auto;
+}
+
+/* 自定义滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f0f0f0; /* 淡灰色滚动条轨道 */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #555555; /* 深灰色滚动条滑块 */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #444444;
 }
