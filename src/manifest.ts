@@ -30,6 +30,11 @@ export default defineManifest({
       matches: ['http://*/*', 'https://*/*'],
       js: ['src/contentScript/index.ts'],
     },
+    {
+      matches: ["https://www.baidu.com/"],  // 目标网页URL匹配规则
+      "js": ["src/contentScript/baidu.ts"],           // 内容脚本文件
+      "run_at": "document_end"               // 在DOM加载完成后执行
+    }
   ],
   side_panel: {
     default_path: 'sidepanel.html',
