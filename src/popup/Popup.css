@@ -51,3 +51,47 @@ a {
   color: #cccccc;
   text-decoration: none;
 }
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border: 1px solid #eee;
+  border-radius: 0.5rem;
+  background-color: #f8f8f8;
+  transition: all 0.2s ease;
+}
+
+li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+li span {
+  display: block;
+  text-align: left;
+}
+
+li span:first-child {
+  color: #61dafb;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+li span:last-child {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+}
