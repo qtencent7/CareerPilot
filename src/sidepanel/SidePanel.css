@@ -43,6 +43,6 @@ body {
 /* 适配暗色模式 */
 @media (prefers-color-scheme: dark) {
   .side-panel-container {
-    background-color: #141414;
+    /* background-color: #141414; */
   }
 }

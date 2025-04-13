@@ -1,25 +1,22 @@
 import React from 'react';
-import { ConfigProvider, theme } from 'antd';
-import zhCN from 'antd/locale/zh_CN';
+import { Layout, Tabs } from 'antd';
 import ChatPanel from './components/ChatPanel';
 import './SidePanel.css';
 
+const { Content } = Layout;
+const { TabPane } = Tabs;
+
 const SidePanel: React.FC = () => {
   return (
-    <ConfigProvider
-      locale={zhCN}
-      theme={{
-        algorithm: theme.defaultAlgorithm,
-        token: {
-          colorPrimary: '#1890ff',
-          borderRadius: 6,
-        },
-      }}
-    >
-      <div className="side-panel-container">
-        <ChatPanel title="浏览器 AI 助手" />
-      </div>
-    </ConfigProvider>
+    <Layout className="side-panel-container">
+      <Content style={{textAlign: 'initial', margin: '0'}}>
+        <Tabs defaultActiveKey="chat" className="side-panel-tabs">
+          <TabPane tab="Chat" key="chat">
+            <ChatPanel />
+          </TabPane>
+        </Tabs>
+      </Content>
+    </Layout>
   );
 };
 

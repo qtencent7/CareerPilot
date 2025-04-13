@@ -1,31 +1,31 @@
 .chat-input-container {
   display: flex;
   align-items: flex-end;
-  padding: 12px;
-  background-color: #f5f5f5;
-  border-top: 1px solid #e8e8e8;
+  padding: 10px;
+  background-color: #fff;
+  border-top: 1px solid #f0f0f0;
   position: sticky;
   bottom: 0;
 }
 
 .chat-input-wrapper {
   flex: 1;
-  border: 1px solid #d9d9d9;
-  border-radius: 8px;
   background-color: #fff;
   padding: 8px 12px;
   margin-right: 8px;
+  position: relative;
 }
 
 .chat-input-wrapper:focus-within {
-  border-color: #40a9ff;
   box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
 
 .chat-input-wrapper .ant-input {
   border: none;
   padding: 0;
+  padding-right: 100px;
   resize: none;
+  border-radius: 4px;
 }
 
 .chat-input-wrapper .ant-input:focus {
@@ -36,18 +36,46 @@
   display: flex;
   justify-content: space-between;
   margin-top: 8px;
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
 }
 
 .action-button {
-  color: #595959;
-}
-
-.send-button {
-  height: 40px;
-  width: 40px;
-  border-radius: 50%;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  padding: 0 4px;
+}
+
+.send-button {
+  width: auto !important;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.send-button-main {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.send-button-dropdown {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 适配暗色模式 */
+@media (prefers-color-scheme: dark) {
+  .chat-input-container {
+    /* background-color: #1f1f1f;
+    border-top-color: #303030; */
+  }
 }
