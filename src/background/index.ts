@@ -11,7 +11,6 @@ chrome.runtime.onMessage.addListener((request) => {
 
 // 处理标签页信息的函数
 async function processTab(tab: chrome.tabs.Tab) {
-  debugger
   if (!tab.url) return;
   
   // 创建历史记录对象
