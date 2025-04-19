@@ -34,7 +34,12 @@ export default defineManifest({
       matches: ["https://www.baidu.com/"],  // 目标网页URL匹配规则
       "js": ["src/contentScript/baidu.ts"],           // 内容脚本文件
       "run_at": "document_end"               // 在DOM加载完成后执行
-    }
+    },
+    {
+      matches: ['https://x.com/*'],
+      js: ['src/contentScript/x_collector.ts'],
+      run_at: 'document_end',
+    },
   ],
   side_panel: {
     default_path: 'sidepanel.html',
@@ -46,7 +51,7 @@ export default defineManifest({
     },
   ],
   permissions: ['sidePanel', 'storage', 'tabs'],
-  chrome_url_overrides: {
-    newtab: 'newtab.html',
-  },
+  // chrome_url_overrides: {
+  //   newtab: 'newtab.html',
+  // },
 })
