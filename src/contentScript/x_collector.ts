@@ -60,21 +60,72 @@ function observeTweetCards() {
   observer.observe(document.body, { childList: true, subtree: true });
 }
 
+// 获取推文完整 HTML
+function getTweetFullHtml(cardElem: HTMLElement): string | null {
+  return cardElem.outerHTML;
+}
+
 // 获取推文正文 HTML
 function getTweetHtmlFromCard(cardElem: HTMLElement): string | null {
   const tweetElem = cardElem.querySelector('[data-testid="tweetText"], div[lang]');
   return tweetElem ? tweetElem.innerHTML : null;
 }
 
+// 递归克隆并将所有节点的 computed style 转为 inline style
+function cloneWithInlineStyle(elem: HTMLElement): HTMLElement {
+  const clone = elem.cloneNode(true) as HTMLElement;
+  const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT, null);
+  const nodeList: HTMLElement[] = [clone];
+  let node = walker.nextNode() as HTMLElement | null;
+  while (node) {
+    nodeList.push(node);
+    node = walker.nextNode() as HTMLElement | null;
+  }
+  // 获取原始节点列表
+  const origWalker = document.createTreeWalker(elem, NodeFilter.SHOW_ELEMENT, null);
+  const origNodeList: HTMLElement[] = [elem];
+  let origNode = origWalker.nextNode() as HTMLElement | null;
+  while (origNode) {
+    origNodeList.push(origNode);
+    origNode = origWalker.nextNode() as HTMLElement | null;
+  }
+  // 应用 computed style
+  nodeList.forEach((cloneNode, i) => {
+    const orig = origNodeList[i];
+    if (orig) {
+      const style = window.getComputedStyle(orig);
+      // (cloneNode as HTMLElement).style.cssText = style.cssText;
+      for (const prop of style) {
+        if (prop === 'float') {
+          cloneNode.style.cssFloat = style.getPropertyValue(prop);
+          continue;
+        }
+        if (prop.startsWith('-') || prop === 'length' || prop === 'parentRule') continue;
+        
+        const value = style.getPropertyValue(prop);
+        cloneNode.style.setProperty(prop, value);
+      }
+    }
+  });
+  return clone;
+}
+
+// 获取推文静态快照 HTML
+function getTweetSnapshotHtml(cardElem: HTMLElement): string | null {
+  const clone = cloneWithInlineStyle(cardElem);
+  return clone.outerHTML;
+}
+
 // 发送内容到后端
 async function handleCollect(cardElem: HTMLElement) {
   const html = getTweetHtmlFromCard(cardElem);
-  if (!html) {
+  const styled_html = getTweetSnapshotHtml(cardElem);
+  if (!html || !styled_html) {
     alert('No tweet content found!');
     return;
   }
   try {
-    await axios.post(API_BASE, { html });
+    await axios.post(API_BASE, { html, styled_html });
     alert('Collected!');
   } catch (err) {
     alert('Failed to collect: ' + (err as any).message);

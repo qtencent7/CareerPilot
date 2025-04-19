@@ -51,7 +51,7 @@ export default defineManifest({
     },
   ],
   permissions: ['sidePanel', 'storage', 'tabs'],
-  // chrome_url_overrides: {
-  //   newtab: 'newtab.html',
-  // },
+  chrome_url_overrides: {
+    newtab: 'newtab.html',
+  },
 })
